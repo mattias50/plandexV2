@@ -134,19 +134,76 @@ func (ps PlanSettings) GetRequiredEnvVars() map[string]bool {
 	if ms == nil {
 		ms = DefaultModelPack
 	}
+	if ms == nil {
+		envVars["OPENAI_API_KEY"] = true
+		return envVars
+	}
 
-	envVars[ms.Planner.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.Builder.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.WholeFileBuilder.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.PlanSummary.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.Namer.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.CommitMsg.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.ExecStatus.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.Architect.BaseModelConfig.ApiKeyEnvVar] = true
-	envVars[ms.Coder.BaseModelConfig.ApiKeyEnvVar] = true
+	// Required components - get through GetFinalLargeContextFallback first
+	if config := ms.Planner.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+		envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
 
-	// for backward compatibility with <= 0.8.4 server versions
-	if len(envVars) == 0 {
+	if config := ms.Builder.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+		envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
+
+	if config := ms.PlanSummary.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+		envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
+
+	if config := ms.Namer.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+		envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
+
+	if config := ms.CommitMsg.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+		envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
+
+	if config := ms.ExecStatus.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+		envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
+
+	// Optional components - check pointer first
+	if ms.WholeFileBuilder != nil {
+		if config := ms.WholeFileBuilder.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+			envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+		} else {
+			envVars["OPENAI_API_KEY"] = true
+		}
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
+
+	if ms.Architect != nil {
+		if config := ms.Architect.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+			envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+		} else {
+			envVars["OPENAI_API_KEY"] = true
+		}
+	} else {
+		envVars["OPENAI_API_KEY"] = true
+	}
+
+	if ms.Coder != nil {
+		if config := ms.Coder.GetFinalLargeContextFallback(); config.BaseModelConfig.ApiKeyEnvVar != "" {
+			envVars[config.BaseModelConfig.ApiKeyEnvVar] = true
+		} else {
+			envVars["OPENAI_API_KEY"] = true
+		}
+	} else {
 		envVars["OPENAI_API_KEY"] = true
 	}
 

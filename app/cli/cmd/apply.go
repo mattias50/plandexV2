@@ -1,3 +1,4 @@
+
 package cmd
 
 import (
@@ -11,6 +12,10 @@ import (
 
 	"github.com/spf13/cobra"
 )
+
+// TODO: Add support for custom API keys in a future update. This should handle
+// different model providers and their respective environment variables as returned
+// by GetRequiredEnvVars().
 
 var autoCommit, skipCommit, autoExec bool
 
