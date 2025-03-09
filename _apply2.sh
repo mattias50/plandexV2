@@ -153,10 +153,6 @@ check_nil_pointer_issues() {
   return 0
 }
 
-  print_error "Could not find an available port after $max_attempts attempts"
-  exit 1
-}
-
 # Set working directories
 CLI_DIR="app/cli"
 SERVER_DIR="app/server"
